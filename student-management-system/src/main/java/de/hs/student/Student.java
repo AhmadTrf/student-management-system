@@ -1,5 +1,7 @@
 package de.hs.student;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Student {
@@ -7,6 +9,7 @@ public class Student {
     private String firstName;
     private String lastName;
     private String email;
+    private final List<Grade> grades = new ArrayList<>();
 
     public Student(String id, String firstName, String lastName, String email) {
         if (id == null || id.trim().isEmpty()) {
@@ -67,6 +70,39 @@ public class Student {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    public void addGrade(Grade grade) {
+        if (grade == null) {
+            throw new IllegalArgumentException("Grade must not be null");
+        }
+        grades.add(grade);
+    }
+
+    public List<Grade> getGrades() {
+        return new ArrayList<>(grades);
+    }
+
+    public double calculateAverageGrade() {
+        if (grades.isEmpty()) {
+            throw new IllegalStateException("Cannot calculate average without grades");
+        }
+
+        double sum = 0.0;
+        for (Grade grade : grades) {
+            sum += grade.getValue();
+        }
+
+        return sum / grades.size();
+    }
+
+    public boolean hasPassedAllCourses() {
+        for (Grade grade : grades) {
+            if (!grade.isPassed()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
