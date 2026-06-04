@@ -45,4 +45,41 @@ public class StudentServiceTest extends TestCase {
 
         assertFalse(removed);
     }
+
+        public void testFindStudentByEmail() {
+        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
+
+        service.addStudent(student);
+
+        assertTrue(service.getStudentByEmail("ali@example.com").isPresent());
+        assertEquals("1", service.getStudentByEmail("ali@example.com").get().getId());
+    }
+
+    public void testAddGradeToStudent() {
+        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
+
+        service.addStudent(student);
+        service.addGradeToStudent("1", new Grade("Java Development", 1.7));
+
+        assertEquals(1, service.getStudentById("1").get().getGrades().size());
+    }
+
+    public void testCalculateAverageGradeForStudent() {
+        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
+
+        service.addStudent(student);
+        service.addGradeToStudent("1", new Grade("Java Development", 1.7));
+        service.addGradeToStudent("1", new Grade("Software Engineering", 2.3));
+
+        assertEquals(2.0, service.calculateAverageGrade("1"));
+    }
+
+    public void testAddGradeToUnknownStudentFails() {
+        try {
+            service.addGradeToStudent("999", new Grade("Java Development", 1.7));
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException exception) {
+            assertEquals("Student not found", exception.getMessage());
+        }
+    }
 }

@@ -23,7 +23,27 @@ public class StudentService {
         return repository.findById(id);
     }
 
+    public Optional<Student> getStudentByEmail(String email) {
+        return repository.findAll().stream()
+                .filter(student -> student.getEmail().equals(email))
+                .findFirst();
+    }
+
     public boolean removeStudent(String id) {
         return repository.deleteById(id);
+    }
+
+    public void addGradeToStudent(String studentId, Grade grade) {
+        Student student = repository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        student.addGrade(grade);
+    }
+
+    public double calculateAverageGrade(String studentId) {
+        Student student = repository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        return student.calculateAverageGrade();
     }
 }
