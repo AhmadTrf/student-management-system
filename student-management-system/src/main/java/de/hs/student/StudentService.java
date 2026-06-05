@@ -1,5 +1,6 @@
 package de.hs.student;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,7 +8,14 @@ public class StudentService {
 
     private final StudentRepository repository;
 
+    @SuppressFBWarnings(
+            value = {"CT_CONSTRUCTOR_THROW", "EI_EXPOSE_REP2"},
+            justification = "Constructor validates dependency. Repository is intentionally injected as shared service dependency."
+    )
     public StudentService(StudentRepository repository) {
+        if (repository == null) {
+            throw new IllegalArgumentException("Repository must not be null");
+        }
         this.repository = repository;
     }
 

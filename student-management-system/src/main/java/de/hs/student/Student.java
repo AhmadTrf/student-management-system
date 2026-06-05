@@ -1,9 +1,14 @@
 package de.hs.student;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressFBWarnings(
+        value = {"CT_CONSTRUCTOR_THROW"},
+        justification = "Constructors validate input and intentionally reject invalid domain objects."
+)
 public class Student {
     private final String id;
     private String firstName;

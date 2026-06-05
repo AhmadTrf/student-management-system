@@ -1,6 +1,12 @@
 package de.hs.student;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public class Grade {
+@SuppressFBWarnings(
+        value = {"CT_CONSTRUCTOR_THROW"},
+        justification = "Constructors validate input and intentionally reject invalid domain objects."
+)
+
+public final class Grade {
     private final String courseName;
     private final double value;
 
