@@ -2,14 +2,22 @@
 
 ## Overview
 
-Student Management System is a Java application developed as part of the module "Professional Java Development – SE Tools & AI-Assisted Engineering".
+Student Management System is a Java application developed for the module **Professional Java Development – SE Tools & AI-Assisted Engineering**.
 
-The application allows:
+The project demonstrates modern software engineering practices including version control, build management, testing, code quality analysis, continuous integration, and AI-assisted development.
 
-* Creating students
-* Managing grades
-* Calculating average grades
-* Generating student reports
+---
+
+## Features
+
+* Create and manage students
+* Add and manage grades
+* Calculate average grades
+* Generate student reports
+* Save students to JSON files
+* Load students from JSON files
+
+---
 
 ## Technologies
 
@@ -17,49 +25,146 @@ The application allows:
 * Maven
 * Git
 * JUnit
+* Mockito
+* Gson
 * CheckStyle
 * PMD
+* SpotBugs
+* JaCoCo
+* Jenkins
 
-## Build
+---
 
-```bash
-mvn clean test
-```
-
-## Run
-
-```bash
-mvn exec:java -Dexec.mainClass="de.hs.student.App"
-```
-
-## Testing
-
-```bash
-mvn test
-```
-
-## Quality Checks
-
-```bash
-mvn verify
-```
-
-## Architecture
+## Project Structure
 
 * Student
 * Grade
 * StudentRepository
 * StudentService
 * StudentReportService
+* StudentJsonStorage
+* Console Application
+
+---
+
+## Build
+
+```bash
+mvn clean compile
+```
+
+---
+
+## Run Tests
+
+```bash
+mvn test
+```
+
+Current project status:
+
+* 24 Unit Tests
+* Mockito-based tests included
+* JaCoCo coverage reporting enabled
+
+---
+
+## Quality Checks
+
+CheckStyle:
+
+```bash
+mvn checkstyle:check
+```
+
+PMD:
+
+```bash
+mvn pmd:check
+```
+
+SpotBugs:
+
+```bash
+mvn spotbugs:check
+```
+
+Full verification:
+
+```bash
+mvn verify
+```
+
+---
+
+## Coverage Report
+
+Generate coverage report:
+
+```bash
+mvn test
+```
+
+Coverage report:
+
+```text
+target/site/jacoco/index.html
+```
+
+---
+
+## Run Application
+
+```bash
+mvn exec:java -Dexec.mainClass="de.hs.student.App"
+```
+
+---
+
+## Git Workflow
+
+The project demonstrates:
+
+* Feature branches
+* Merge workflow
+* Version tags
+* Incremental commits
+
+Release tag:
+
+```text
+v1.0
+```
+
+---
+
+## Continuous Integration
+
+The repository contains a Jenkins pipeline with:
+
+1. Build
+2. Test
+3. Quality Verification
+
+---
 
 ## AI Usage
 
-Claude Code / AI assistance was used for:
+AI assistance was used for:
 
-* Project structure generation
+* Project planning
+* Code review
 * Test generation
 * Refactoring suggestions
 * Documentation support
+* Debugging support
 
-All generated code was manually reviewed and tested before being committed.
+All generated code was manually reviewed, adapted, tested, and committed by the developer.
 
+---
+
+## Author
+
+Ahmad Trefi
+
+Master Program
