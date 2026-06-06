@@ -4,29 +4,59 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository for storing and retrieving students.
+ */
 public class StudentRepository {
 
-    private final List<Student> students = new ArrayList<>();
+  private final List<Student> students = new ArrayList<>();
 
-    public void save(Student student) {
-        students.add(student);
-    }
+  /**
+   * Saves a student.
+   *
+   * @param student student to save
+   */
+  public void save(Student student) {
+    students.add(student);
+  }
 
-    public List<Student> findAll() {
-        return new ArrayList<>(students);
-    }
+  /**
+   * Returns all students.
+   *
+   * @return list of students
+   */
+  public List<Student> findAll() {
+    return new ArrayList<>(students);
+  }
 
-    public Optional<Student> findById(String id) {
-        return students.stream()
-                .filter(student -> student.getId().equals(id))
-                .findFirst();
-    }
+  /**
+   * Finds a student by id.
+   *
+   * @param id student id
+   * @return matching student if found
+   */
+  public Optional<Student> findById(String id) {
+    return students.stream()
+        .filter(student -> student.getId().equals(id))
+        .findFirst();
+  }
 
-    public boolean deleteById(String id) {
-        return students.removeIf(student -> student.getId().equals(id));
-    }
+  /**
+   * Deletes a student by id.
+   *
+   * @param id student id
+   * @return true if removed
+   */
+  public boolean deleteById(String id) {
+    return students.removeIf(student -> student.getId().equals(id));
+  }
 
-    public int count() {
-        return students.size();
-    }
+  /**
+   * Returns the number of stored students.
+   *
+   * @return student count
+   */
+  public int count() {
+    return students.size();
+  }
 }
