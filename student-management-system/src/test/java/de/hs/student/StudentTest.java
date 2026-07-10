@@ -1,59 +1,94 @@
 package de.hs.student;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StudentTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
-    public void testGetFullName() {
-        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
+class StudentTest {
 
-        assertEquals("Ali Muster", student.getFullName());
-    }
+  private static final double DELTA = 0.0001;
 
-    public void testAddGrade() {
-        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
-        Grade grade = new Grade("Java Development", 1.7);
+  @Test
+  void returnsFullName() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
 
-        student.addGrade(grade);
+    assertEquals("Ali Muster", student.getFullName());
+  }
 
-        assertEquals(1, student.getGrades().size());
-    }
+  @Test
+  void addsGrade() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+    Grade grade = new Grade("Java Development", 1.7);
 
-    public void testCalculateAverageGrade() {
-        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
+    student.addGrade(grade);
 
-        student.addGrade(new Grade("Java Development", 1.7));
-        student.addGrade(new Grade("Software Engineering", 2.3));
+    assertEquals(1, student.getGrades().size());
+    assertEquals(grade, student.getGrades().get(0));
+  }
 
-        assertEquals(2.0, student.calculateAverageGrade());
-    }
+  @Test
+  void calculatesAverageGrade() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
 
-    public void testCannotCalculateAverageWithoutGrades() {
-        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
+    student.addGrade(new Grade("Java Development", 1.7));
+    student.addGrade(new Grade("Software Engineering", 2.3));
 
-        try {
-            student.calculateAverageGrade();
-            fail("Expected IllegalStateException");
-        } catch (IllegalStateException exception) {
-            assertEquals("Cannot calculate average without grades", exception.getMessage());
-        }
-    }
+    assertEquals(2.0, student.calculateAverageGrade(), DELTA);
+  }
 
-    public void testPassedAllCourses() {
-        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
+  @Test
+  void rejectsAverageCalculationWithoutGrades() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
 
-        student.addGrade(new Grade("Java Development", 1.7));
-        student.addGrade(new Grade("Software Engineering", 4.0));
+    IllegalStateException exception =
+        assertThrows(
+            IllegalStateException.class,
+            student::calculateAverageGrade);
 
-        assertTrue(student.hasPassedAllCourses());
-    }
+    assertEquals(
+        "Cannot calculate average without grades",
+        exception.getMessage());
+  }
 
-    public void testNotPassedAllCourses() {
-        Student student = new Student("1", "Ali", "Muster", "ali@example.com");
+  @Test
+  void reportsAllCoursesAsPassed() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
 
-        student.addGrade(new Grade("Java Development", 1.7));
-        student.addGrade(new Grade("Software Engineering", 5.0));
+    student.addGrade(new Grade("Java Development", 1.7));
+    student.addGrade(new Grade("Software Engineering", 4.0));
 
-        assertFalse(student.hasPassedAllCourses());
-    }
+    assertTrue(student.hasPassedAllCourses());
+  }
+
+  @Test
+  void reportsFailedCourse() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+
+    student.addGrade(new Grade("Java Development", 1.7));
+    student.addGrade(new Grade("Software Engineering", 5.0));
+
+    assertFalse(student.hasPassedAllCourses());
+  }
+
+  @Test
+  void rejectsNullGrade() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> student.addGrade(null));
+
+    assertEquals("Grade must not be null", exception.getMessage());
+  }
 }
