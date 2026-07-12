@@ -1,33 +1,40 @@
 package de.hs.student;
 
-import java.util.Optional;
-import junit.framework.TestCase;
-
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class StudentReportServiceMockitoTest extends TestCase {
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
 
-    public void testGenerateReportUsesRepositoryMock() {
-        StudentRepository repository = mock(StudentRepository.class);
+class StudentReportServiceMockitoTest {
 
-        Student student = new Student(
-                "1",
-                "Ahmad",
-                "Trefi",
-                "trefiahm@hs-albsig.de"
-        );
+  @Test
+  void usesRepositoryToGenerateReport() {
+    StudentRepository repository = mock(StudentRepository.class);
 
-        student.addGrade(new Grade("Java Development", 1.7));
+    Student student =
+        new Student(
+            "1",
+            "Ahmad",
+            "Trefi",
+            "trefiahm@hs-albsig.de");
 
-        when(repository.findById("1")).thenReturn(Optional.of(student));
+    student.addGrade(new Grade("Java Development", 1.7));
 
-        StudentReportService reportService = new StudentReportService(repository);
+    when(repository.findById("1"))
+        .thenReturn(Optional.of(student));
 
-        String report = reportService.generateReport("1");
+    StudentReportService reportService =
+        new StudentReportService(repository);
 
-        assertTrue(report.contains("Ahmad Trefi"));
-        assertTrue(report.contains("Java Development"));
-        assertTrue(report.contains("PASSED"));
-    }
+    String report = reportService.generateReport("1");
+
+    assertTrue(report.contains("Ahmad Trefi"));
+    assertTrue(report.contains("Java Development"));
+    assertTrue(report.contains("PASSED"));
+
+    verify(repository).findById("1");
+  }
 }

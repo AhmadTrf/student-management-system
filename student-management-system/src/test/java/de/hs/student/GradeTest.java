@@ -1,43 +1,71 @@
 package de.hs.student;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GradeTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
-    public void testCreateValidGrade() {
-        Grade grade = new Grade("Java Development", 1.7);
+class GradeTest {
 
-        assertEquals("Java Development", grade.getCourseName());
-        assertEquals(1.7, grade.getValue());
-    }
+  private static final double DELTA = 0.0001;
 
-    public void testPassingGrade() {
-        Grade grade = new Grade("Java Development", 4.0);
+  @Test
+  void createsValidGrade() {
+    Grade grade = new Grade("Java Development", 1.7);
 
-        assertTrue(grade.isPassed());
-    }
+    assertEquals("Java Development", grade.getCourseName());
+    assertEquals(1.7, grade.getValue(), DELTA);
+  }
 
-    public void testFailingGrade() {
-        Grade grade = new Grade("Java Development", 5.0);
+  @Test
+  void considersGradeFourAsPassed() {
+    Grade grade = new Grade("Java Development", 4.0);
 
-        assertFalse(grade.isPassed());
-    }
+    assertTrue(grade.isPassed());
+  }
 
-    public void testRejectInvalidGradeTooLow() {
-        try {
-            new Grade("Java Development", 0.7);
-            fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException exception) {
-            assertEquals("Grade must be between 1.0 and 5.0", exception.getMessage());
-        }
-    }
+  @Test
+  void considersGradeFiveAsFailed() {
+    Grade grade = new Grade("Java Development", 5.0);
 
-    public void testRejectInvalidGradeTooHigh() {
-        try {
-            new Grade("Java Development", 6.0);
-            fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException exception) {
-            assertEquals("Grade must be between 1.0 and 5.0", exception.getMessage());
-        }
-    }
+    assertFalse(grade.isPassed());
+  }
+
+  @Test
+  void rejectsGradeBelowAllowedRange() {
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> new Grade("Java Development", 0.7));
+
+    assertEquals(
+        "Grade must be between 1.0 and 5.0",
+        exception.getMessage());
+  }
+
+  @Test
+  void rejectsGradeAboveAllowedRange() {
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> new Grade("Java Development", 6.0));
+
+    assertEquals(
+        "Grade must be between 1.0 and 5.0",
+        exception.getMessage());
+  }
+
+  @Test
+  void rejectsEmptyCourseName() {
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> new Grade(" ", 1.7));
+
+    assertEquals(
+        "Course name must not be empty",
+        exception.getMessage());
+  }
 }

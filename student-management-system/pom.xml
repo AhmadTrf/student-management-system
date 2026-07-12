@@ -1,102 +1,286 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://maven.apache.org/POM/4.0.0
+        https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>de.hs.student</groupId>
   <artifactId>student-management-system</artifactId>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>student-management-system</name>
-  <url>http://maven.apache.org</url>
+
+  <name>Student Management System</name>
+
+  <description>
+    Command-line Java application for managing students, grades,
+    reports, and JSON persistence.
+  </description>
+
+  <developers>
+    <developer>
+      <name>Ahmad Trefi</name>
+    </developer>
+  </developers>
+
   <properties>
-  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  <maven.compiler.source>11</maven.compiler.source>
-  <maven.compiler.target>11</maven.compiler.target>
-</properties>
+    <maven.compiler.release>11</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <junit.version>5.14.4</junit.version>
+    <mockito.version>5.12.0</mockito.version>
+    <gson.version>2.10.1</gson.version>
+    <log4j.version>2.26.1</log4j.version>
+    <spotbugs.annotations.version>4.8.3</spotbugs.annotations.version>
+
+    <compiler.plugin.version>3.13.0</compiler.plugin.version>
+    <surefire.plugin.version>3.5.5</surefire.plugin.version>
+    <checkstyle.plugin.version>3.3.1</checkstyle.plugin.version>
+    <pmd.plugin.version>3.22.0</pmd.plugin.version>
+    <spotbugs.plugin.version>4.8.3.1</spotbugs.plugin.version>
+    <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
+    <exec.plugin.version>3.6.3</exec.plugin.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-bom</artifactId>
+        <version>${log4j.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
+
+    <!-- Unit testing with JUnit 5 -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.github.spotbugs</groupId>
-      <artifactId>spotbugs-annotations</artifactId>
-      <version>4.8.3</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.10.1</version>
-    </dependency>
+
+    <!-- Mocking for isolated unit tests -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.12.0</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- JSON persistence -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${gson.version}</version>
+    </dependency>
+
+    <!-- Logging API -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+    </dependency>
+
+    <!-- Logging implementation -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- SpotBugs annotations used by the source code -->
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <version>${spotbugs.annotations.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
+
   <build>
-  <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-checkstyle-plugin</artifactId>
-      <version>3.3.1</version>
-      <configuration>
-        <configLocation>google_checks.xml</configLocation>
-        <consoleOutput>true</consoleOutput>
-        <failsOnError>true</failsOnError>
-      </configuration>
-      <executions>
-        <execution>
-          <phase>verify</phase>
-          <goals>
-            <goal>check</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-pmd-plugin</artifactId>
-      <version>3.22.0</version>
-      <configuration>
-        <failOnViolation>true</failOnViolation>
-        <printFailingErrors>true</printFailingErrors>
-      </configuration>
-      <executions>
-        <execution>
-          <phase>verify</phase>
-          <goals>
-            <goal>check</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
-    <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.8.3.1</version>
-    </plugin>
-    <plugin>
+    <plugins>
+
+      <!-- Compile the project with Java 11 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${compiler.plugin.version}</version>
+
+        <configuration>
+          <release>${maven.compiler.release}</release>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+
+      <!-- Execute JUnit 5 tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire.plugin.version}</version>
+      </plugin>
+
+      <!-- Start the application with mvn exec:java -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${exec.plugin.version}</version>
+
+        <configuration>
+          <mainClass>de.hs.student.App</mainClass>
+        </configuration>
+      </plugin>
+
+      <!-- Generate and enforce test coverage -->
+      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.12</version>
+        <version>${jacoco.plugin.version}</version>
+
         <executions>
-            <execution>
-                <goals>
-                    <goal>prepare-agent</goal>
-                </goals>
-            </execution>
-            <execution>
-                <id>report</id>
-                <phase>test</phase>
-                <goals>
-                    <goal>report</goal>
-                </goals>
-            </execution>
+          <execution>
+            <id>prepare-coverage-agent</id>
+
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>create-coverage-report</id>
+            <phase>verify</phase>
+
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>enforce-coverage</id>
+            <phase>verify</phase>
+
+            <goals>
+              <goal>check</goal>
+            </goals>
+
+            <configuration>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+
+                  <limits>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.70</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
         </executions>
-    </plugin>
-  </plugins>
-</build>
+      </plugin>
+
+      <!-- Check Google Java Style rules -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${checkstyle.plugin.version}</version>
+
+        <configuration>
+          <configLocation>google_checks.xml</configLocation>
+          <consoleOutput>true</consoleOutput>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <failOnViolation>true</failOnViolation>
+          <failsOnError>true</failsOnError>
+          <violationSeverity>warning</violationSeverity>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>checkstyle-validation</id>
+            <phase>verify</phase>
+
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Run the project-specific PMD rules -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${pmd.plugin.version}</version>
+
+        <configuration>
+          <targetJdk>${maven.compiler.release}</targetJdk>
+
+          <rulesets>
+            <ruleset>
+              ${project.basedir}/config/pmd/pmd-custom-ruleset.xml
+            </ruleset>
+          </rulesets>
+
+          <includeTests>true</includeTests>
+          <minimumPriority>5</minimumPriority>
+          <linkXRef>false</linkXRef>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>pmd-validation</id>
+            <phase>verify</phase>
+
+            <goals>
+              <goal>check</goal>
+            </goals>
+
+            <configuration>
+              <failOnViolation>true</failOnViolation>
+              <failurePriority>5</failurePriority>
+              <maxAllowedViolations>0</maxAllowedViolations>
+              <printFailingErrors>true</printFailingErrors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Detect possible bugs in compiled Java code -->
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${spotbugs.plugin.version}</version>
+
+        <configuration>
+          <effort>Max</effort>
+          <threshold>Medium</threshold>
+          <failOnError>true</failOnError>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>spotbugs-validation</id>
+            <phase>verify</phase>
+
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
 </project>

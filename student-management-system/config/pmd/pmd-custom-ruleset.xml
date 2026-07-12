@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ruleset
+    name="Student Management System PMD Rules"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://pmd.sourceforge.net/ruleset/2.0.0
+        https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+  <description>
+    Project-specific PMD rules for the Student Management System.
+    The rules focus on safe resource handling, useful tests,
+    correct logging, maintainable control flow, and unused code.
+  </description>
+
+  <!-- Logging and debugging output -->
+  <rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace"/>
+  <rule ref="category/java/bestpractices.xml/SystemPrintln"/>
+
+  <!-- Unused code -->
+  <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+  <rule ref="category/java/bestpractices.xml/UnusedPrivateField"/>
+  <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+
+  <!-- File and resource handling -->
+  <rule ref="category/java/bestpractices.xml/UseStandardCharsets"/>
+  <rule ref="category/java/bestpractices.xml/UseTryWithResources"/>
+  <rule ref="category/java/errorprone.xml/CloseResource"/>
+
+  <!-- Error handling and logging correctness -->
+  <rule ref="category/java/errorprone.xml/EmptyCatchBlock"/>
+  <rule ref="category/java/errorprone.xml/InvalidLogMessageFormat"/>
+
+  <!-- JUnit 5 test quality -->
+  <rule ref="category/java/bestpractices.xml/JUnitTestsShouldIncludeAssert"/>
+  <rule ref="category/java/bestpractices.xml/JUnit5TestShouldBePackagePrivate"/>
+
+  <!-- Code style and control flow -->
+  <rule ref="category/java/codestyle.xml/ControlStatementBraces"/>
+  <rule ref="category/java/codestyle.xml/UnnecessaryImport"/>
+  <rule ref="category/java/codestyle.xml/UnnecessaryModifier"/>
+
+  <!-- Maintainability -->
+  <rule ref="category/java/design.xml/CyclomaticComplexity"/>
+
+</ruleset>

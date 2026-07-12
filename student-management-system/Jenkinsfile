@@ -1,23 +1,61 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven-3.9.9'
+    }
+
     stages {
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                dir('student-management-system') {
+                    sh 'mvn -B clean compile'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                dir('student-management-system') {
+                    sh 'mvn -B test'
+                }
+            }
+
+            post {
+                always {
+                    junit(
+                        testResults: 'student-management-system/target/surefire-reports/*.xml',
+                        allowEmptyResults: false
+                    )
+                }
             }
         }
 
         stage('Quality') {
             steps {
-                sh 'mvn verify'
+                dir('student-management-system') {
+                    sh 'mvn -B verify -DskipTests'
+                }
             }
+        }
+
+        stage('Package') {
+            steps {
+                archiveArtifacts(
+                    artifacts: 'student-management-system/target/*.jar',
+                    fingerprint: true
+                )
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build, tests and quality checks completed successfully.'
+        }
+
+        failure {
+            echo 'Pipeline failed. Check the first failed stage.'
         }
     }
 }

@@ -1,55 +1,61 @@
 package de.hs.student;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StudentReportServiceTest extends TestCase {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-    public void testGenerateReport() {
+class StudentReportServiceTest {
 
-        StudentRepository repository = new StudentRepository();
+  private StudentRepository repository;
+  private StudentReportService reportService;
 
-        Student student =
-                new Student("1",
-                        "Ali",
-                        "Muster",
-                        "ali@example.com");
+  @BeforeEach
+  void setUp() {
+    repository = new StudentRepository();
+    reportService = new StudentReportService(repository);
+  }
 
-        student.addGrade(new Grade("Java", 1.7));
-        student.addGrade(new Grade("Software Engineering", 2.3));
+  @Test
+  void generatesReportForExistingStudent() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
 
-        repository.save(student);
+    student.addGrade(new Grade("Java", 1.7));
+    student.addGrade(new Grade("Software Engineering", 2.3));
 
-        StudentReportService reportService =
-                new StudentReportService(repository);
+    repository.save(student);
 
-        String report =
-                reportService.generateReport("1");
+    String report = reportService.generateReport("1");
 
-        assertTrue(report.contains("Ali Muster"));
-        assertTrue(report.contains("Java"));
-        assertTrue(report.contains("Average Grade"));
-        assertTrue(report.contains("PASSED"));
-    }
+    assertTrue(report.contains("Ali Muster"));
+    assertTrue(report.contains("Java"));
+    assertTrue(report.contains("Average Grade"));
+    assertTrue(report.contains("PASSED"));
+  }
 
-    public void testUnknownStudent() {
+  @Test
+  void rejectsUnknownStudent() {
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> reportService.generateReport("999"));
 
-        StudentRepository repository =
-                new StudentRepository();
+    assertEquals("Student not found", exception.getMessage());
+  }
 
-        StudentReportService reportService =
-                new StudentReportService(repository);
+  @Test
+  void generatesFailedStatusWhenCourseWasNotPassed() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
 
-        try {
-            reportService.generateReport("999");
+    student.addGrade(new Grade("Java", 5.0));
+    repository.save(student);
 
-            fail("Expected IllegalArgumentException");
+    String report = reportService.generateReport("1");
 
-        } catch (IllegalArgumentException exception) {
-
-            assertEquals(
-                    "Student not found",
-                    exception.getMessage()
-            );
-        }
-    }
+    assertTrue(report.contains("Status: FAILED"));
+  }
 }
