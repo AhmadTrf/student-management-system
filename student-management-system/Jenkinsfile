@@ -1,23 +1,31 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven-3.9.9'
+    }
+
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -B clean compile'
+                dir('student-management-system') {
+                    sh 'mvn -B clean compile'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn -B test'
+                dir('student-management-system') {
+                    sh 'mvn -B test'
+                }
             }
 
             post {
                 always {
                     junit(
-                        testResults: 'target/surefire-reports/*.xml',
-                        allowEmptyResults: true
+                        testResults: 'student-management-system/target/surefire-reports/*.xml',
+                        allowEmptyResults: false
                     )
                 }
             }
@@ -25,14 +33,16 @@ pipeline {
 
         stage('Quality') {
             steps {
-                sh 'mvn -B verify -DskipTests'
+                dir('student-management-system') {
+                    sh 'mvn -B verify -DskipTests'
+                }
             }
         }
 
         stage('Package') {
             steps {
                 archiveArtifacts(
-                    artifacts: 'target/*.jar',
+                    artifacts: 'student-management-system/target/*.jar',
                     fingerprint: true
                 )
             }
