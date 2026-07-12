@@ -140,4 +140,120 @@ class StudentServiceTest {
         "Repository must not be null",
         exception.getMessage());
   }
+
+  @Test
+  void rejectsNullStudent() {
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> service.addStudent(null));
+  
+    assertEquals("Student must not be null", exception.getMessage());
+  }
+  
+  @Test
+  void rejectsDuplicateStudentId() {
+    Student firstStudent =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+  
+    Student secondStudent =
+        new Student("1", "Sara", "Test", "sara@example.com");
+  
+    service.addStudent(firstStudent);
+  
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> service.addStudent(secondStudent));
+  
+    assertEquals(
+        "Student id already exists",
+        exception.getMessage());
+  }
+  
+  @Test
+  void rejectsDuplicateEmailAddress() {
+    Student firstStudent =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+  
+    Student secondStudent =
+        new Student("2", "Sara", "Test", "ALI@example.com");
+  
+    service.addStudent(firstStudent);
+  
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> service.addStudent(secondStudent));
+  
+    assertEquals(
+        "Student email already exists",
+        exception.getMessage());
+  }
+  
+  @Test
+  void calculatesMinimumGrade() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+  
+    service.addStudent(student);
+    service.addGradeToStudent("1", new Grade("Java", 2.3));
+    service.addGradeToStudent("1", new Grade("Security", 1.3));
+    service.addGradeToStudent("1", new Grade("Databases", 3.0));
+  
+    assertEquals(
+        1.3,
+        service.calculateMinimumGrade("1"),
+        DELTA);
+  }
+  
+  @Test
+  void calculatesMaximumGrade() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+  
+    service.addStudent(student);
+    service.addGradeToStudent("1", new Grade("Java", 2.3));
+    service.addGradeToStudent("1", new Grade("Security", 1.3));
+    service.addGradeToStudent("1", new Grade("Databases", 3.0));
+  
+    assertEquals(
+        3.0,
+        service.calculateMaximumGrade("1"),
+        DELTA);
+  }
+  
+  @Test
+  void rejectsMinimumCalculationWithoutGrades() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+  
+    service.addStudent(student);
+  
+    IllegalStateException exception =
+        assertThrows(
+            IllegalStateException.class,
+            () -> service.calculateMinimumGrade("1"));
+  
+    assertEquals(
+        "Cannot calculate minimum without grades",
+        exception.getMessage());
+  }
+  
+  @Test
+  void rejectsMaximumCalculationWithoutGrades() {
+    Student student =
+        new Student("1", "Ali", "Muster", "ali@example.com");
+  
+    service.addStudent(student);
+  
+    IllegalStateException exception =
+        assertThrows(
+            IllegalStateException.class,
+            () -> service.calculateMaximumGrade("1"));
+  
+    assertEquals(
+        "Cannot calculate maximum without grades",
+        exception.getMessage());
+  }
 }
